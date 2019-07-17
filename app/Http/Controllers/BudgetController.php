@@ -9,15 +9,23 @@ use App\Budget;
 
 class BudgetController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
         return response()->json([
-            'ok' => true,
+            'data' => $request
+                ->user()
+                ->budgets()
+                ->get(),
         ], Response::HTTP_OK);
     }
 
-    public function show(Budget $budget) {
+    public function show(Budget $budget, Request $request) {
+        if ($budget->user_id == $request->user()->id) {
+            return response()->json([
+                'data' => $budget,
+            ], Response::HTTP_OK);
+        }
         return response()->json([
-            'data' => $budget,
-        ], Response::HTTP_OK);
+            'message' => 'You don\'t have access to this budget.',
+        ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
