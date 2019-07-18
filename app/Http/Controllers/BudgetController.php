@@ -28,4 +28,13 @@ class BudgetController extends Controller
             'message' => 'You don\'t have access to this budget.',
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
+
+    public function store(Request $request) {
+        $budget = Budget::create([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'user_id' => $request->user()->id,
+        ]);
+        return response()->json($budget, Response::HTTP_OK);
+    }
 }
