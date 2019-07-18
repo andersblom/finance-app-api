@@ -15,18 +15,18 @@ class BudgetController extends Controller
                 ->user()
                 ->budgets()
                 ->get(),
-        ], Response::HTTP_OK);
+        ]);
     }
 
     public function show(Budget $budget, Request $request) {
         if ($budget->user_id == $request->user()->id) {
             return response()->json([
                 'data' => $budget,
-            ], Response::HTTP_OK);
+            ]);
         }
         return response()->json([
             'message' => 'You don\'t have access to this budget.',
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        ], Response::HTTP_FORBIDDEN);
     }
 
     public function store(Request $request) {
@@ -35,6 +35,24 @@ class BudgetController extends Controller
             'slug' => $request->slug,
             'user_id' => $request->user()->id,
         ]);
-        return response()->json($budget, Response::HTTP_OK);
+        return response()->json($budget);
+    }
+
+    public function update(Budget $budget, Request $request) {
+        if (!$budget->belongsToUser($request->user())) {
+            return response()->json([
+                'message' => 'You don\'t have access to this budget.'
+            ], Response::HTTP_FORBIDDEN);
+        }
+        $request->validate([
+            'name' => 'required',
+            'slug' => 'required',
+        ]);
+
+        $budget->name = $request->name;
+        $budget->slug = $request->slug;
+        $budget->save();
+
+        return response()->json($budget);
     }
 }

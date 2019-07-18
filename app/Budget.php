@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\User;
+
 use Illuminate\Database\Eloquent\Model;
 
 class Budget extends Model
@@ -14,5 +16,9 @@ class Budget extends Model
 
     public function entries() {
         return $this->hasMany('App\Entry');
+    }
+
+    public function belongsToUser(User $user): bool {
+        return $this->user_id == $user->id;
     }
 }
