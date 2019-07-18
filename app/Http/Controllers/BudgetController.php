@@ -55,4 +55,16 @@ class BudgetController extends Controller
 
         return response()->json($budget);
     }
+
+    public function destroy(Budget $budget, Request $request) {
+        if (!$budget->belongsToUser($request->user())) {
+            return response()->json([
+                'message' => 'You don\'t have access to this budget.'
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $budget->delete();
+
+        return response()->json($budget);
+    }
 }

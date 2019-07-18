@@ -3,11 +3,12 @@
 namespace App;
 
 use App\User;
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; 
 
 class Budget extends Model
 {
+    use SoftDeletes;
     protected $fillable = ['name', 'slug', 'user_id'];
 
     public function user() {
