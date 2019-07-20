@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['middleware' => ['json.response']], function () {
+Route::group(['middleware' => ['cors', 'json.response']], function () {
     /**
      * Public routes
      */
