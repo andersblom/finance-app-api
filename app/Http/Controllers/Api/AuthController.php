@@ -42,10 +42,8 @@ class AuthController extends Controller
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                return response([
-                    'token' => $token,
-                    'user' => $user,
-                ], Response::HTTP_OK);
+                $user['token'] = $token;
+                return response($user, Response::HTTP_OK);
             } 
         } else {
             return response([], Response::HTTP_UNAUTHORIZED);
