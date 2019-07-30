@@ -18,15 +18,12 @@ class BudgetController extends Controller
         ]);
     }
 
-    public function show(Budget $budget, Request $request) {
-        if ($budget->user_id == $request->user()->id) {
-            return response()->json([
-                'data' => $budget,
-            ]);
-        }
+    public function show(Budget $budget) {
+        $this->authorize('view', $budget);
+
         return response()->json([
-            'message' => 'You don\'t have access to this budget.',
-        ], Response::HTTP_FORBIDDEN);
+            'data' => $budget,
+        ]);
     }
 
     public function store(Request $request) {
@@ -39,11 +36,7 @@ class BudgetController extends Controller
     }
 
     public function update(Budget $budget, Request $request) {
-        if (!$budget->belongsToUser($request->user())) {
-            return response()->json([
-                'message' => 'You don\'t have access to this budget.'
-            ], Response::HTTP_FORBIDDEN);
-        }
+        $this->authorize('update', $budget);
         $request->validate([
             'name' => 'required',
             'slug' => 'required',
@@ -56,13 +49,8 @@ class BudgetController extends Controller
         return response()->json($budget);
     }
 
-    public function destroy(Budget $budget, Request $request) {
-        if (!$budget->belongsToUser($request->user())) {
-            return response()->json([
-                'message' => 'You don\'t have access to this budget.'
-            ], Response::HTTP_FORBIDDEN);
-        }
-
+    public function destroy(Budget $budget) {
+        $this->authorize('delete', $budget);
         $budget->delete();
 
         return response()->json($budget);
