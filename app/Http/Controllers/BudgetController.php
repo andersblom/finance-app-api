@@ -10,20 +10,18 @@ use App\Budget;
 class BudgetController extends Controller
 {
     public function index(Request $request) {
-        return response()->json([
-            'data' => $request
+        return response()->json(
+            $request
                 ->user()
                 ->budgets()
-                ->get(),
-        ]);
+                ->get()
+        );
     }
 
     public function show(Budget $budget) {
         $this->authorize('view', $budget);
 
-        return response()->json([
-            'data' => $budget,
-        ]);
+        return response()->json($budget);
     }
 
     public function store(Request $request) {
