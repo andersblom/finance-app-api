@@ -59,6 +59,13 @@ class BudgetPolicy
         return $this->isCreatedByUser($user, $budget);
     }
 
+    /**
+     * Determine whether the user has created the budget.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Budget  $budget
+     * @return bool
+     */
     private function isCreatedByUser(User $user, Budget $budget)
     {
         return (int) $user->id === (int) $budget->user_id;
